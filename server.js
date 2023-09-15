@@ -12,8 +12,8 @@ app.use(express.static('public'));
 app.use('/api',api);
 
 //ROUTERS FOR STATIC HTML PAGES
-app.get('*', (req, res) => res.sendFile(path.join(__dirname, '/public/')));
 app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, 'public/notes.html')));
+app.get('*', (req, res) => res.sendFile(path.join(__dirname, '/public/')));
 
 app.listen(PORT, () =>
   console.log(`Serving static asset routes on port http://localhost:${PORT}/`)
