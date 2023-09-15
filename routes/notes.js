@@ -1,8 +1,18 @@
 const router = require('express').Router();
+const {deleteNote,readAndWrite} = require('../helpers/notes');
+const uniqid = require('uniqid');
+
+
+
 
 //GET ROUTE -- URL: '/api/notes'
-router.get('/', (req, res) => res.json(NoteData));
+router.get('/', (req, res) => {
+  const NoteData = require('../db/db.json');
+  res.json(NoteData);
+}
+);
 
+//POST ROUTE
 router.post('/', (req, res) => {
 
   const { title, text } = req.body;
@@ -12,20 +22,10 @@ router.post('/', (req, res) => {
     const newNote = {
       title,
       text,
+      id: uniqid(),
     };
 
-    //Reads database information in, pushes the new note to the end
-    const fileData = JSON.parse(fs.readFileSync('./db/db.json'));
-    fileData.push(newNote);
-
-    //writes the read in data+new note back to the file
-    fs.writeFileSync(`./db/db.json`, JSON.stringify(fileData, null, 2), (err) =>
-      err
-        ? console.error(err)
-        : console.log(
-            `Review for ${newNote.title} has been written to JSON file`
-          )
-    );
+    readAndWrite(newNote);
 
     const response = {
       status: 'success',
@@ -41,12 +41,10 @@ router.post('/', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   res.send('Got a DELETE request at /user')
-  if (req.params.id){
-    let results = res.json(NoteData);
-    console.log(results);
-    const fileData = JSON.parse(fs.readFileSync('./db/db.json'));
-    //THIS ONLY WORKS WHEN THE NUMBER IS ENTERED, IT DOESN'T WORK IF A VARIABLE IS PASSED IN??
-    const choice = fileData.find(e => e.id === 2);
+  if (req.params.id){ 
+    deleteNote(req.params.id);
+    
+
   }else{
     res.status(500).json("Provide a Note ID");
   }
