@@ -25,15 +25,24 @@ const hide = (elem) => {
 // activeNote is used to keep track of the note in the textarea
 let activeNote = {};
 
-const getNotes = () =>
+const getNotes = () => {
+  console.log('get notes fetch fired')
   fetch('/api/notes', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
   })
+  .then((result) => {
+    return result;
+  })
+  .then((data) => {
+    renderNoteList(data);
+  })
+}
 
-const saveNote = (note) =>
+
+const saveNote = (note) => {
   fetch('/api/notes', {
     method: 'POST',
     headers: {
@@ -41,6 +50,7 @@ const saveNote = (note) =>
     },
     body: JSON.stringify(note),
   })
+}
 
 
 const deleteNote = (id) =>
@@ -72,16 +82,15 @@ const handleNoteSave = () => {
     title: noteTitle.value,
     text: noteText.value,
   };
-  saveNote(newNote).then(async () => {
-    await getAndRenderNotes();
-    renderActiveNote();
-  });
+  saveNote(newNote);
+  getNotes();
 };
 
 // Delete the clicked note
 const handleNoteDelete = (e) => {
   // Prevents the click listener for the list from being called when the button inside of it is clicked
   e.stopPropagation();
+  console.log('delete note handler clicked')
 
   const note = e.target;
   const noteId = JSON.parse(note.parentElement.getAttribute('data-note')).id;
@@ -90,10 +99,9 @@ const handleNoteDelete = (e) => {
     activeNote = {};
   }
 
-  deleteNote(noteId).then(() => {
-    getAndRenderNotes();
-    renderActiveNote();
-  });
+  deleteNote(noteId);
+  getNotes();
+  renderActiveNote();
 };
 
 // Sets the activeNote and displays it
@@ -173,7 +181,7 @@ const renderNoteList = async (notes) => {
 };
 
 // Gets notes from the db and renders them to the sidebar
-const getAndRenderNotes = () => getNotes().then(renderNoteList);
+// const getAndRenderNotes = () => getNotes().then(renderNoteList);
 
 if (window.location.pathname === '/notes') {
   saveNoteBtn.addEventListener('click', handleNoteSave);
@@ -182,4 +190,5 @@ if (window.location.pathname === '/notes') {
   noteText.addEventListener('keyup', handleRenderSaveBtn);
 }
 
-getAndRenderNotes();
+// getAndRenderNotes();
+getNotes();
