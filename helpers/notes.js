@@ -1,5 +1,10 @@
 const fs = require('fs');
 
+const readNotes = () => {
+  const fileData = JSON.parse(fs.readFileSync('./db/db.json'));
+  return fileData;
+}
+
 function deleteNote (rmvdObj) {
     const fileData = JSON.parse(fs.readFileSync('./db/db.json'));
     const finalArray = fileData.filter(el => el.id !== rmvdObj);
@@ -10,6 +15,8 @@ function deleteNote (rmvdObj) {
             `Review for note ID ${rmvdObj} has been deleted from JSON file`
           )
     )
+
+    readNotes();
 };
 
 function readAndWrite (newNote){
@@ -25,6 +32,9 @@ function readAndWrite (newNote){
             `Review for ${newNote.title} has been written to JSON file`
           )
     )
+    
+    readNotes();
+
 };
 
-module.exports = {deleteNote,readAndWrite};
+module.exports = {readNotes, deleteNote,readAndWrite};
