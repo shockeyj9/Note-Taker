@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 //ROUTE FOR API/DATA
-app.use('/api',api);
+app.use(api);
 
 //ROUTERS FOR STATIC HTML PAGES
 app.get('/notes', (req, res) => res.sendFile(path.join(__dirname, 'public/notes.html')));
