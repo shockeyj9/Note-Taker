@@ -3,7 +3,7 @@ const app = express();
 
 //ROUTING FILES 
 const noteRouter = require('./notes');
-app.use('/notes',noteRouter);
+app.use('/api/notes',noteRouter);
 
 module.exports = app;
 
